@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <button id="b" style="background-color: aquamarine">
+      한국영화 박스오피스
+    </button>
+    <div id="result" style="background-color: black; color: aliceblue"></div>
+    <script>
+      b_tag = document.getElementById("b")
+      b_tag.addEventListener("click", function () {
+        alert("리스트가 출력되었습니다.")
+        console.log("한국영화 박스오피스 순위")
+
+        axios
+          .get(
+            "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json",
+            {
+              params: {
+                key: "1472db1e665d05968f386424d679decd",
+                targetDt: "20251124",
+                repNationCd: "K",
+              },
+            }
+          )
+          .then((res) => {
+            console.log("kobis DB 연결 성공")
+            console.log(res.data)
+            let json = res.data
+
+            let list = ""
+            for (let i = 0; i < 10; i++) {
+              let movie = json.boxOfficeResult.dailyBoxOfficeList[i]
+
+              rank = movie.rank
+              movieNm = movie.movieNm
+              openDt = movie.openDt
+              audiAcc = movie.audiAcc
+              salesAcc = movie.salesAcc
+
+              let one =
+                rank +
+                " / " +
+                movieNm +
+                " / " +
+                openDt +
+                " / " +
+                audiAcc +
+                " / " +
+                salesAcc +
+                "<br>"
+              console.log(one)
+              console.log("--------------------------------------")
+              list += one
+            }
+            result.innerHTML = list
+          })
+      })
+    </script>
+  </body>
+</html>
