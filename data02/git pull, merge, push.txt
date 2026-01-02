@@ -1,0 +1,601 @@
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (mic006016)
+$ git status
+On branch mic006016
+Your branch is up to date with 'origin/mic006016'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   src/Pages/HomePage.jsx
+        modified:   src/Pages/ResultPage.jsx
+        modified:   src/Pages/StatusPage.jsx
+        modified:   src/context/ResultDataContext.jsx
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (mic006016)
+$ git diff
+diff --git a/src/Pages/HomePage.jsx b/src/Pages/HomePage.jsx
+index 85b39db..276546b 100644
+--- a/src/Pages/HomePage.jsx
++++ b/src/Pages/HomePage.jsx
+@@ -100,13 +100,13 @@ export default function HomePage() {
+       resetResults()
+       setSelection(body)
+
+-      const [dbRes] = await Promise.all([
+-        // axios.get("/ai", { params: body }),
++      const [aiRes, dbRes] = await Promise.all([
++        axios.get(`${import.meta.env.VITE_API_URL}/ai`, { params: body }),
+         axios.get(`${import.meta.env.VITE_API_URL}/result`, { params: body }),
+       ])
+
+       // 응답 Provider에 저장
+-      // setAiResult(aiRes.data)
++      setAiResult(aiRes.data)
+       setDbResult(dbRes.data)
+
+       // 저장 후 ResultPage로 이동
+diff --git a/src/Pages/ResultPage.jsx b/src/Pages/ResultPage.jsx
+index 2707ecb..da0c3b3 100644
+--- a/src/Pages/ResultPage.jsx
++++ b/src/Pages/ResultPage.jsx
+@@ -12,7 +12,7 @@ import { useEffect, useRef, useState } from "react"
+ import { useNavigate } from "react-router-dom"
+
+ export default function ResultPage() {
+-  const { dbResult, selection } = useResultData()
++  const { dbResult, selection, aiResult } = useResultData()
+   const navigate = useNavigate()
+   const hasRedirected = useRef(false)
+   const [isLoading, setIsLoading] = useState(true)
+@@ -76,7 +76,7 @@ export default function ResultPage() {
+   const data_ssi = dbResult[3] || []
+   const data_cai = dbResult[4] || []
+   const data_ts = dbResult[5] || []
+-  // console.log(data_ts)
++  console.log(aiResult)
+
+   const monthAvg = Math.floor(
+     data_qs[data_qs.length - 1].qs_sales / 3
+@@ -118,7 +118,10 @@ export default function ResultPage() {
+             </H2>
+           </ResultContent>
+           <ResultTitle>
+-            <H1>추천 or 비추천</H1>
++            <H1>
++              {aiResult?.prediction?.label}
++              <small> 입니다.</small>
++            </H1>
+           </ResultTitle>
+         </ResultWrap>
+         <ResultImg>
+@@ -137,6 +140,12 @@ export default function ResultPage() {
+       <SectionTitle>
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (mic006016)
+$ git status
+On branch mic006016
+Your branch is up to date with 'origin/mic006016'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   src/Pages/HomePage.jsx
+        modified:   src/Pages/ResultPage.jsx
+        modified:   src/Pages/StatusPage.jsx
+        modified:   src/context/ResultDataContext.jsx
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (mic006016)
+$ git add -i
+           staged     unstaged path
+  1:    unchanged        +3/-3 src/Pages/HomePage.jsx
+  2:    unchanged       +12/-3 src/Pages/ResultPage.jsx
+  3:    unchanged        +1/-1 src/Pages/StatusPage.jsx
+  4:    unchanged      +16/-16 src/context/ResultDataContext.jsx
+
+*** Commands ***
+  1: status       2: update       3: revert       4: add untracked
+  5: patch        6: diff         7: quit         8: help
+What now> u
+           staged     unstaged path
+  1:    unchanged        +3/-3 src/Pages/HomePage.jsx
+  2:    unchanged       +12/-3 src/Pages/ResultPage.jsx
+  3:    unchanged        +1/-1 src/Pages/StatusPage.jsx
+  4:    unchanged      +16/-16 src/context/ResultDataContext.jsx
+Update>> 1-4
+           staged     unstaged path
+* 1:    unchanged        +3/-3 src/Pages/HomePage.jsx
+* 2:    unchanged       +12/-3 src/Pages/ResultPage.jsx
+* 3:    unchanged        +1/-1 src/Pages/StatusPage.jsx
+* 4:    unchanged      +16/-16 src/context/ResultDataContext.jsx
+Update>>
+updated 4 paths
+
+*** Commands ***
+  1: status       2: update       3: revert       4: add untracked
+  5: patch        6: diff         7: quit         8: help
+What now> q
+Bye.
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (mic006016)
+$ git commit -m "resultPage 수정"
+[mic006016 20a5a8e] resultPage 수정
+ 4 files changed, 32 insertions(+), 23 deletions(-)
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (mic006016)
+$ git status
+On branch mic006016
+Your branch is ahead of 'origin/mic006016' by 1 commit.
+  (use "git push" to publish your local commits)
+
+nothing to commit, working tree clean
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (mic006016)
+$ git checkout master
+Switched to branch 'master'
+Your branch is behind 'origin/master' by 6 commits, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (master)
+$ git pull
+Updating f1af8ca..95b2256
+Fast-forward
+ public/geo/seoul_municipalities_geo_simple.json |  27 --
+ src/Containers.jsx                              |  24 +-
+ src/Pages/AboutPage.jsx                         |  59 ----
+ src/Pages/BoardPage.jsx                         |  35 ++-
+ src/Pages/HomePage.jsx                          |  26 +-
+ src/Pages/ResultPage.jsx                        | 360 +++++++++++++-----------
+ 6 files changed, 258 insertions(+), 273 deletions(-)
+ delete mode 100644 public/geo/seoul_municipalities_geo_simple.json
+ delete mode 100644 src/Pages/AboutPage.jsx
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (master)
+$ git checkout mic006016
+Switched to branch 'mic006016'
+Your branch is ahead of 'origin/mic006016' by 1 commit.
+  (use "git push" to publish your local commits)
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (mic006016)
+$ git merge master
+Auto-merging src/Pages/HomePage.jsx
+Auto-merging src/Pages/ResultPage.jsx
+CONFLICT (content): Merge conflict in src/Pages/ResultPage.jsx
+Automatic merge failed; fix conflicts and then commit the result.
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (mic006016|MERGING)
+$ git diff
+diff --cc src/Pages/ResultPage.jsx
+index da0c3b3,f1e6faf..0000000
+--- a/src/Pages/ResultPage.jsx
++++ b/src/Pages/ResultPage.jsx
+@@@ -12,12 -12,12 +12,12 @@@ import { useEffect, useRef, useState }
+  import { useNavigate } from "react-router-dom"
+
+  export default function ResultPage() {
+ -  const { dbResult, selection } = useResultData()
+ +  const { dbResult, selection, aiResult } = useResultData()
+    const navigate = useNavigate()
+    const hasRedirected = useRef(false)
+-   const [isLoading, setIsLoading] = useState(true)
++   const [showCharts, setShowCharts] = useState(false)
+
+-   // ✅ selection / result 상태 계산
++   // selection / result 상태 계산
+    const hasSelection =
+      selection && selection.gu && selection.dong && selection.category
+
+@@@ -107,166 -119,169 +119,332 @@@
+            </LoadingBox>
+          </LoadingOverlay>
+        )}
+++<<<<<<< HEAD
+ +      <ResultWrapper>
+ +        <ResultWrap>
+ +          <ResultContent>
+ +            <H2>
+ +              선택하신
+ +              <span style={{ color: "#e65100" }}> {gu} </span>
+ +              <span style={{ color: "#e65100" }}>{dong}</span>의
+ +              <span style={{ color: "#e65100" }}> {category} </span>업종은
+ +            </H2>
+ +          </ResultContent>
+ +          <ResultTitle>
+ +            <H1>
+ +              {aiResult?.prediction?.label}
+ +              <small> 입니다.</small>
+ +            </H1>
+ +          </ResultTitle>
+ +        </ResultWrap>
+ +        <ResultImg>
+ +          <ImgBox>
+ +            <img
+ +              src="src/imgs/high.png"
+ +              style={{
+ +                height: "auto",
+ +                // objectFit: "cover",
+ +                // objectPosition: "center",
+ +              }}
+ +            />
+ +          </ImgBox>
+ +        </ResultImg>
+ +      </ResultWrapper>
+ +      <SectionTitle>
+ +        How it works<p></p>
+ +        <h2>상세 분석 내용</h2>
+ +        <br />
+ +        <p
+ +          dangerouslySetInnerHTML={{
+ +            __html: aiResult?.prediction?.report ?? "",
+ +          }}
+ +        />
+ +      </SectionTitle>
+ +      <SectionWrap>
+ +        <SecTitle>1. 최근 분기 간단 요약</SecTitle>
+ +        <SecBox>
+ +          <UBox>
+ +            <Table>
+ +              <TableRow>
+ +                <TableCell sx={{ fontWeight: "bold" }}>
+ +                  🏦 동일업종 수
+ +                </TableCell>
+ +                <TableCell>{ssiCnt} 개</TableCell>
+ +                <TableCell sx={{ fontWeight: "bold" }}>
+ +                  🏨 유사업종 수
+ +                </TableCell>
+ +                <TableCell>{ssiSmrCnt} 개</TableCell>
+ +              </TableRow>
+ +              <TableRow>
+ +                <TableCell sx={{ fontWeight: "bold" }}>
+ +                  💰 월 평균 매출
+ +                </TableCell>
+ +                <TableCell>{monthAvg} 원</TableCell>
+ +                <TableCell sx={{ fontWeight: "bold" }}>
+ +                  🚶🏻 월 평균 유동인구
+ +                </TableCell>
+ +                <TableCell>{monthAvgPop} 명</TableCell>
+ +              </TableRow>
+ +              <TableRow>
+ +                <TableCell sx={{ fontWeight: "bold" }}>
+ +                  🙋🏻‍♂️ 월 평균 매출(남)
+ +                </TableCell>
+ +                <TableCell>{monthAvgMen} 원</TableCell>
+ +                <TableCell sx={{ fontWeight: "bold" }}>
+ +                  🙋🏻‍♀️ 월 평균 매출(여)
+ +                </TableCell>
+ +                <TableCell>{monthAvgWomen} 원</TableCell>
+ +              </TableRow>
+ +              <TableRow>
+ +                <TableCell sx={{ fontWeight: "bold" }}>
+ +                  🚍 버스 정류장
+ +                </TableCell>
+ +                <TableCell>
+ +                  {data_cai[data_cai.length - 1].cai_bus_stop} 개
+ +                </TableCell>
+ +                <TableCell sx={{ fontWeight: "bold" }}>🚇 지하철</TableCell>
+ +                <TableCell>
+ +                  {data_cai[data_cai.length - 1].cai_subway} 개
+ +                </TableCell>
+ +              </TableRow>
+ +              <TableRow>
+ +                <TableCell sx={{ fontWeight: "bold" }}>🏤 초등학교</TableCell>
+ +                <TableCell>
+ +                  {data_cai[data_cai.length - 1].cai_school_ele} 개
+ +                </TableCell>
+ +                <TableCell sx={{ fontWeight: "bold" }}>🏟 중학교</TableCell>
+ +                <TableCell>
+ +                  {data_cai[data_cai.length - 1].cai_school_mid} 개
+ +                </TableCell>
+ +              </TableRow>
+ +              <TableRow>
+ +                <TableCell sx={{ fontWeight: "bold" }}>🏫 고등학교</TableCell>
+ +                <TableCell>
+ +                  {data_cai[data_cai.length - 1].cai_school_hig} 개
+ +                </TableCell>
+ +                <TableCell sx={{ fontWeight: "bold" }}>🏯 대학교</TableCell>
+ +                <TableCell>
+ +                  {data_cai[data_cai.length - 1].cai_university} 개
+ +                </TableCell>
+ +              </TableRow>
+ +            </Table>
+ +          </UBox>
+ +          <DBox></DBox>
+ +        </SecBox>
+ +      </SectionWrap>
+ +      <SectionWrap>
+ +        <SecTitle>2. 분기별 매출 현황</SecTitle>
+ +        <SecChart>
+ +          <SalesBar data={data_qs} />
+ +        </SecChart>
+ +      </SectionWrap>
+ +      <SectionWrap>
+ +        <SecTitle>3. 유동인구 현황</SecTitle>
+ +        <SecChart>
+ +          <FpLine data={data_fp} />
+ +        </SecChart>
+ +      </SectionWrap>
+ +      <SectionWrap>
+ +        <SecTitle>4. 시간별 매출 현황(2024년 분기별)</SecTitle>
+ +        <SecChart>
+ +          <TimeSales data={timeSales} />
+ +        </SecChart>
+ +      </SectionWrap>
+ +      <SectionWrap>
+ +        <SecTitle>5. 연령별 유동인구 분포 및 매출 현황</SecTitle>
+ +        <SecChart>
+ +          <DivBox>
+ +            <AgeRadar data={data_fp} />
+ +          </DivBox>
+ +          <DivBox>
+ +            <AgeSaleRadar data={data_ags} />
+ +          </DivBox>
+ +        </SecChart>
+ +      </SectionWrap>
+ +      <CommentWrap>
+ +        <CmtTitle>
+ +          <h6>Notice</h6>
+ +        </CmtTitle>
+ +        <CmtContent>
+ +          <CmtBox>
+ +            <p></p>본 웹 사이트를 통해 배포, 전송되거나, 본 웹 사이트에 포함되어
+ +            있는 서비스로부터 제공되는 상권정보는 참고 사항이며, 사실과 차이가
+ +            있을 수 있어 정확성이나 신뢰성에 대해 어떠한 보증도 하지 않습니다.
+ +            <p></p>
+ +            제공된 정보에 의한 투자결과에 대한 법적인 책임을 지지 않습니다.
+ +            또한, 서비스 및 정보와 관련하여 직접, 간접, 부수적, 파생적인 손해에
+ +            대해서 책임을 지지 않습니다.
+ +            <p></p> 필요한 경우 그 재량에 의해 타인의 권리를 침해하거나 위반하는
+ +            사용자에 대하여 사전 통지 없이 서비스 이용 제한 조치를 취할 수
+ +            있습니다.
+ +          </CmtBox>
+ +        </CmtContent>
+ +      </CommentWrap>
+++=======
++
++       {showCharts && (
++         <>
++           <ResultWrapper>
++             <ResultWrap>
++               <ResultContent>
++                 <H2>
++                   선택하신
++                   <span style={{ color: "#e65100" }}> {gu} </span>
++                   <span style={{ color: "#e65100" }}>{dong}</span>의
++                   <span style={{ color: "#e65100" }}> {category} </span>업종은
++                 </H2>
++               </ResultContent>
++               <ResultTitle>
++                 <H1>추천 or 비추천</H1>
++               </ResultTitle>
++             </ResultWrap>
++             <ResultImg>
++               <ImgBox>
++                 <img
++                   src="src/imgs/high.png"
++                   style={{
++                     height: "auto",
++                     // objectFit: "cover",
++                     // objectPosition: "center",
++                   }}
++                 />
++               </ImgBox>
++             </ResultImg>
++           </ResultWrapper>
++           <SectionTitle>
++             How it works<p></p>
++             <h2>상세 분석 내용</h2>
++           </SectionTitle>
++
++           <SectionWrap>
++             <SecTitle>1. 최근 분기 간단 요약</SecTitle>
++             <SecBox>
++               <UBox>
++                 <Table>
++                   <TableRow>
++                     <TableCell sx={{ fontWeight: "bold" }}>
++                       🏦 동일업종 수
++                     </TableCell>
++                     <TableCell>{ssiCnt} 개</TableCell>
++                     <TableCell sx={{ fontWeight: "bold" }}>
++                       🏨 유사업종 수
++                     </TableCell>
++                     <TableCell>{ssiSmrCnt} 개</TableCell>
++                   </TableRow>
++                   <TableRow>
++                     <TableCell sx={{ fontWeight: "bold" }}>
++                       💰 월 평균 매출
++                     </TableCell>
++                     <TableCell>{monthAvg} 원</TableCell>
++                     <TableCell sx={{ fontWeight: "bold" }}>
++                       🚶🏻 월 평균 유동인구
++                     </TableCell>
++                     <TableCell>{monthAvgPop} 명</TableCell>
++                   </TableRow>
++                   <TableRow>
++                     <TableCell sx={{ fontWeight: "bold" }}>
++                       🙋🏻‍♂️ 월 평균 매출(남)
++                     </TableCell>
++                     <TableCell>{monthAvgMen} 원</TableCell>
++                     <TableCell sx={{ fontWeight: "bold" }}>
++                       🙋🏻‍♀️ 월 평균 매출(여)
++                     </TableCell>
++                     <TableCell>{monthAvgWomen} 원</TableCell>
++                   </TableRow>
++                   <TableRow>
++                     <TableCell sx={{ fontWeight: "bold" }}>
++                       🚍 버스 정류장
++                     </TableCell>
++                     <TableCell>
++                       {data_cai[data_cai.length - 1].cai_bus_stop} 개
++                     </TableCell>
++                     <TableCell sx={{ fontWeight: "bold" }}>🚇 지하철</TableCell>
++                     <TableCell>
++                       {data_cai[data_cai.length - 1].cai_subway} 개
++                     </TableCell>
++                   </TableRow>
++                   <TableRow>
++                     <TableCell sx={{ fontWeight: "bold" }}>
++                       🏤 초등학교
++                     </TableCell>
++                     <TableCell>
++                       {data_cai[data_cai.length - 1].cai_school_ele} 개
++                     </TableCell>
++                     <TableCell sx={{ fontWeight: "bold" }}>🏟 중학교</TableCell>
++                     <TableCell>
++                       {data_cai[data_cai.length - 1].cai_school_mid} 개
++                     </TableCell>
++                   </TableRow>
++                   <TableRow>
++                     <TableCell sx={{ fontWeight: "bold" }}>
++                       🏫 고등학교
++                     </TableCell>
++                     <TableCell>
++                       {data_cai[data_cai.length - 1].cai_school_hig} 개
++                     </TableCell>
++                     <TableCell sx={{ fontWeight: "bold" }}>🏯 대학교</TableCell>
++                     <TableCell>
++                       {data_cai[data_cai.length - 1].cai_university} 개
++                     </TableCell>
++                   </TableRow>
++                 </Table>
++               </UBox>
++               <DBox></DBox>
++             </SecBox>
++           </SectionWrap>
++           <SectionWrap>
++             <SecTitle>2. 분기별 매출 현황</SecTitle>
++             <SecChart>
++               <SalesBar data={data_qs} />
++             </SecChart>
++           </SectionWrap>
++           <SectionWrap>
++             <SecTitle>3. 유동인구 현황</SecTitle>
++             <SecChart>
++               <FpLine data={data_fp} />
++             </SecChart>
++           </SectionWrap>
++           <SectionWrap>
++             <SecTitle>4. 시간별 매출 현황(2024년 분기별)</SecTitle>
++             <SecChart>
++               <TimeSales data={timeSales} />
++             </SecChart>
++           </SectionWrap>
++           <SectionWrap>
++             <SecTitle>5. 연령별 유동인구 분포 및 매출 현황</SecTitle>
++             <SecChart>
++               <DivBox>
++                 <AgeRadar data={data_fp} />
++               </DivBox>
++               <DivBox>
++                 <AgeSaleRadar data={data_ags} />
++               </DivBox>
++             </SecChart>
++           </SectionWrap>
++
++           <CommentWrap>
++             <CmtTitle>
++               <h6>Notice</h6>
++             </CmtTitle>
++             <CmtContent>
++               <CmtBox>
++                 <p></p>본 웹 사이트를 통해 배포, 전송되거나, 본 웹 사이트에
++                 포함되어 있는 서비스로부터 제공되는 상권정보는 참고 사항이며,
++                 사실과 차이가 있을 수 있어 정확성이나 신뢰성에 대해 어떠한
++                 보증도 하지 않습니다.
++                 <p></p>
++                 제공된 정보에 의한 투자결과에 대한 법적인 책임을 지지 않습니다.
++                 또한, 서비스 및 정보와 관련하여 직접, 간접, 부수적, 파생적인
++                 손해에 대해서 책임을 지지 않습니다.
++                 <p></p> 필요한 경우 그 재량에 의해 타인의 권리를 침해하거나
++                 위반하는 사용자에 대하여 사전 통지 없이 서비스 이용 제한 조치를
++                 취할 수 있습니다.
++               </CmtBox>
++             </CmtContent>
++           </CommentWrap>
++         </>
++       )}
+++>>>>>>> master
+      </Container>
+    )
+  }
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (mic006016|MERGING)
+$ git add -i
+src/Pages/ResultPage.jsx: needs merge
+           staged     unstaged path
+  1:       +0/-27      nothing public/geo/seoul_municipalities_geo_simple.json
+  2:      +11/-13      nothing src/Containers.jsx
+  3:       +0/-59      nothing src/Pages/AboutPage.jsx
+  4:       +32/-3      nothing src/Pages/BoardPage.jsx
+  5:       +23/-3      nothing src/Pages/HomePage.jsx
+  6:        +0/-0    +198/-175 src/Pages/ResultPage.jsx
+
+*** Commands ***
+  1: status       2: update       3: revert       4: add untracked
+  5: patch        6: diff         7: quit         8: help
+What now> u
+           staged     unstaged path
+  1:        +0/-0    +198/-175 src/Pages/ResultPage.jsx
+Update>> 1
+           staged     unstaged path
+* 1:        +0/-0    +198/-175 src/Pages/ResultPage.jsx
+Update>>
+updated 1 path
+
+*** Commands ***
+  1: status       2: update       3: revert       4: add untracked
+  5: patch        6: diff         7: quit         8: help
+What now> q
+Bye.
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (mic006016|MERGING)
+$ git status
+On branch mic006016
+Your branch is ahead of 'origin/mic006016' by 1 commit.
+  (use "git push" to publish your local commits)
+
+All conflicts fixed but you are still merging.
+  (use "git commit" to conclude merge)
+
+Changes to be committed:
+        deleted:    public/geo/seoul_municipalities_geo_simple.json
+        modified:   src/Containers.jsx
+        deleted:    src/Pages/AboutPage.jsx
+        modified:   src/Pages/BoardPage.jsx
+        modified:   src/Pages/HomePage.jsx
+        modified:   src/Pages/ResultPage.jsx
+
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (mic006016|MERGING)
+$ git commit -m "resultPage 충돌 해결"
+[mic006016 646c6ed] resultPage 충돌 해결
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (mic006016)
+$ git checkout master
+Switched to branch 'master'
+Your branch is up to date with 'origin/master'.
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (master)
+$ git merge mic006016
+Updating 95b2256..646c6ed
+Fast-forward
+ src/Pages/HomePage.jsx            |  6 +++---
+ src/Pages/ResultPage.jsx          | 16 ++++++++++++----
+ src/Pages/StatusPage.jsx          |  2 +-
+ src/context/ResultDataContext.jsx | 32 ++++++++++++++++----------------
+ 4 files changed, 32 insertions(+), 24 deletions(-)
+
+pc@DESKTOP-NPNHATI MINGW64 ~/hdy/0. team_project2/project02 (master)
+$ git push origin master
+Enumerating objects: 31, done.
+Counting objects: 100% (28/28), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (14/14), done.
+Writing objects: 100% (15/15), 1.84 KiB | 376.00 KiB/s, done.
+Total 15 (delta 10), reused 1 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (10/10), completed with 9 local objects.
+To https://github.com/codelabstartup/project02.git
+   95b2256..646c6ed  master -> master
