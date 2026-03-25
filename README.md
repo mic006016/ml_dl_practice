@@ -1,4 +1,4 @@
-## API & Web Crawling Practice
+## API & Web Crawling Practice (Day 5,6)
 
 Open API 연동과 웹 크롤링 기법을 활용한 데이터 수집 실습 기록입니다.
 
@@ -33,7 +33,7 @@ API가 제공되지 않는 웹 페이지에서 필요한 정보를 직접 추출
 
 ---
 
-## Data Science & NLP Practice
+## Data Science & NLP Practice (Day 7,8)
 
 데이터 회귀 분석을 통한 가격 및 매출 예측과 자연어 처리(NLP) 기법을 활용한 텍스트 마이닝 및 감정 분석 실습 프로젝트입니다.
 
